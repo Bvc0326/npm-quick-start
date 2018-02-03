@@ -1,0 +1,89 @@
+{
+  "name": "npm-quick-run",
+  "description": "Quickly run NPM script by prefix without typing the full name",
+  "main": "src/quick-run.js",
+  "version": "0.0.0-semantic-release",
+  "bin": {
+    "nr": "bin/npm-quick-run.js",
+    "nrun": "bin/npm-quick-run.js"
+  },
+  "scripts": {
+    "pretest": "npm run lint",
+    "test": "mocha --harmony src/*-spec.js",
+    "commit": "git-issues && commit-wizard",
+    "issues": "git-issues",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "error": "echo \"an error on purpose\" && exit -1",
+    "lint": "standard bin/*.js src/*.js",
+    "example": "node bin/npm-quick-run.js li",
+    "size": "t=\"$(npm pack .)\"; wc -c \"${t}\"; tar tvf \"${t}\"; rm \"${t}\";",
+    "test-foo": "node -e \"console.assert(process.argv[1] === 'foo bar', process.argv)\""
+  },
+  "files": [
+    "bin",
+    "src/*.js",
+    "!src/*-spec.js"
+  ],
+  "preferGlobal": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bahmutov/npm-quick-run.git"
+  },
+  "keywords": [
+    "npm",
+    "utility",
+    "run",
+    "script",
+    "partial",
+    "quick"
+  ],
+  "author": "Gleb Bahmutov <gleb.bahmutov@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bahmutov/npm-quick-run/issues"
+  },
+  "homepage": "https://github.com/bahmutov/npm-quick-run#readme",
+  "dependencies": {
+    "bluebird": "3.3.1",
+    "cross-spawn-async": "2.1.8",
+    "debug": "2.2.0",
+    "findup": "0.1.5",
+    "json-package": "1.1.2",
+    "simple-bin-help": "1.6.0"
+  },
+  "config": {
+    "pre-git": {
+      "commit-msg": "simple",
+      "pre-commit": [
+        "npm test",
+        "npm run example",
+        "node bin/npm-quick-run.js test-foo 'foo bar'"
+      ],
+      "pre-push": [
+        "npm run size"
+      ],
+      "post-commit": [],
+      "post-merge": []
+    }
+  },
+  "devDependencies": {
+    "@semantic-release/condition-travis": "4.1.4",
+    "condition-node-version": "1.2.0",
+    "git-issues": "1.2.0",
+    "mocha": "2.4.5",
+    "pre-git": "3.3.0",
+    "semantic-release": "6.2.0",
+    "standard": "5.4.1"
+  },
+  "release": {
+    "verifyConditions": [
+      {
+        "path": "@semantic-release/condition-travis"
+      },
+      {
+        "path": "condition-node-version",
+        "node": "4.2.2"
+      }
+    ]
+  }
+}
